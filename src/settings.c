@@ -1,49 +1,10 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
-#define SIZE_FLAG "-s"
-#define ERR_LEVEL_FLAG "-e"
-#define CONTENT_FILE_FLAG "-f"
-#define CONTENT_TEXT_FLAG "-t"
-#define ENCODING_MODE_FLAG "-m"
-
-#define OUT_OF_BOUNDS "Can't accsses argument. Out of bounds"
-#define NOT_ENOUGH_ARGUMENTS "Not enough arguments!"
-#define ARGUMENT_TOO_SHORT "Argument is too short"
-#define UNKNOWN_TYPE "Arguments type is unknown"
-
-#define MAX_SIZE 1024
-
-typedef enum {
-    EC_LOW = 'l',
-    EC_MEDIUM = 'm',
-    EC_QUATILE = 'q',
-    EC_HIGH = 'h',
-    EC_AUTOMATIC = 'a'
-} ErrorCorrection;
-
-typedef enum {
-    W_SMALL = 's',
-    W_MEDIUM = 'm',
-    W_LARGE = 'l'
-} WindowSize;
-
-typedef enum {
-    M_NUM = 'n',
-    M_ALPHA = 'a',
-    M_BYTE = 'b'
-} EncodingMode;
-
-typedef struct {
-    WindowSize winSize;
-    ErrorCorrection errLevel;
-    EncodingMode ecMode;
-    char* content;
-    size_t contentSize;
-} Settings;
+#include "settings.h"
+#include "errors.h"
 
 Settings* initSettings(){
     Settings* stg = malloc(sizeof(Settings));
@@ -53,17 +14,6 @@ Settings* initSettings(){
     stg->ecMode = M_BYTE;
     stg->content = "";
     stg->contentSize = 0;
-}
-
-void ExitWithError(char* mess) {
-    fprintf(stderr, "%s\n", mess);
-    exit(1);
-}
-
-void ArgvBoundCheck(size_t index, int argc){
-    if(index + 1 >= argc){
-        ExitWithError(OUT_OF_BOUNDS);
-    }
 }
 
 FILE* openContentFile(char* filesPath){
@@ -170,14 +120,4 @@ Settings* getSettings(int argc, char** argv) {
     }
 
     return stg;
-}
-
-int main(int argc, char** argv)
-{
-    Settings* stg = getSettings(argc, argv);
-    printf("%c\n", stg->winSize);
-    printf("%s\n", stg->content);
-    printf("%c\n", stg->ecMode);
-
-    free(stg);
 }
