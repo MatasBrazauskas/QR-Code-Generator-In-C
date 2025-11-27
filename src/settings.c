@@ -14,6 +14,8 @@ Settings* initSettings(){
     stg->ecMode = M_BYTE;
     stg->content = "";
     stg->contentSize = 0;
+
+    return stg;
 }
 
 FILE* openContentFile(char* filesPath){
@@ -51,7 +53,7 @@ char* readContentFile(FILE* fptr, size_t *bufferSize){
 Settings* getSettings(int argc, char** argv) {
     Settings* stg = initSettings();
 
-    for(size_t i = 1; i < argc; ++i)
+    for(size_t i = 1; i < (size_t)argc; ++i)
     {
         if(strcmp(argv[i], SIZE_FLAG) == 0){
             ArgvBoundCheck(i, argc);

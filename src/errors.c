@@ -9,7 +9,7 @@ void ExitWithError(char* mess) {
 }
 
 void ArgvBoundCheck(size_t index, int argc){
-    if(index + 1 >= argc){
+    if(index + 1 >= (size_t)argc){
         ExitWithError(OUT_OF_BOUNDS);
     }
 }
