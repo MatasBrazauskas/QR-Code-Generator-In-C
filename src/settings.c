@@ -5,49 +5,23 @@
 
 #include "settings.h"
 #include "errors.h"
+#include "io.h"
 
-Settings* initSettings(){
+static Settings* initSettings(){
     Settings* stg = malloc(sizeof(Settings));
 
-    stg->winSize =W_MEDIUM;
-    stg->errLevel = EC_AUTOMATIC;
-    stg->ecMode = M_BYTE;
-    stg->content = "";
+    if(stg == NULL){
+        ExitWithError("Can't  allocate settings");
+    }
+
+    stg->windowSize =W_MEDIUM;
+    stg->errorCorrectionLevel = EC_AUTOMATIC;
+    stg->encodingMode = M_BYTE;
+    stg->colorMode = WHITE_BLACK;
+    stg->content = NULL;
     stg->contentSize = 0;
 
     return stg;
-}
-
-FILE* openContentFile(char* filesPath){
-    FILE* fptr = fopen(filesPath, "r");
-
-    if(fptr == NULL){
-        ExitWithError("Can't open file");
-    }
-
-    return fptr;
-}
-
-char* readContentFile(FILE* fptr, size_t *bufferSize){
-
-    fseek(fptr, 0, SEEK_END);
-    long size = ftell(fptr);
-    rewind(fptr);
-
-    if(size < 0) {
-        ExitWithError("Can't read file");
-    }
-
-    char* buffer = malloc(size + 1);
-    if(buffer == NULL){
-        ExitWithError("Can't allocate buffer");
-    }
-
-    size_t read = fread(buffer, 1, size, fptr);
-    buffer[read] = '\0';
-
-    *bufferSize = read;
-    return buffer;
 }
 
 Settings* getSettings(int argc, char** argv) {
@@ -61,9 +35,9 @@ Settings* getSettings(int argc, char** argv) {
             char windowSize = tolower(argv[i + 1][0]);
             
             switch(windowSize) {
-                case W_SMALL: stg->winSize = W_SMALL; break;
-                case W_MEDIUM: stg->winSize = W_MEDIUM; break;
-                case W_LARGE: stg->winSize = W_LARGE; break;
+                case W_SMALL: stg->windowSize = W_SMALL; break;
+                case W_MEDIUM: stg->windowSize = W_MEDIUM; break;
+                case W_LARGE: stg->windowSize = W_LARGE; break;
                 default:
                     ExitWithError(UNKNOWN_TYPE);
             }
@@ -72,7 +46,7 @@ Settings* getSettings(int argc, char** argv) {
         else if(strcmp(argv[i], CONTENT_FILE_FLAG) == 0){
             ArgvBoundCheck(i, argc);
 
-            char* path = argv[i + 1];
+            const char* path = argv[i + 1];
 
             if (strlen(argv[i + 1]) == 0) {
                  ExitWithError(ARGUMENT_TOO_SHORT);
@@ -110,15 +84,42 @@ Settings* getSettings(int argc, char** argv) {
             char encodingFlag = tolower(argv[i + 1][0]); 
 
             switch(encodingFlag) {
-                case M_NUM: stg->ecMode = M_NUM; break;
-                case M_ALPHA: stg->ecMode = M_ALPHA; break;
-                case M_BYTE: stg->ecMode = M_BYTE; break;
+                case M_NUM: stg->encodingMode = M_NUM; break;
+                case M_ALPHA: stg->encodingMode = M_ALPHA; break;
+                case M_BYTE: stg->encodingMode = M_BYTE; break;
                 default:
                     ExitWithError(UNKNOWN_TYPE);
             }
 
             i++;
         }
+        else if(strcmp(argv[i], ERR_LEVEL_FLAG) == 0){
+            ArgvBoundCheck(i, argc);
+
+            if(strlen(argv[i + 1]) != 1){
+                ExitWithError(ARGUMENT_TOO_SHORT);
+            }
+
+            char errorCorrection = tolower(argv[i + 1][0]);
+
+            switch(errorCorrection){
+                case EC_LOW: stg->errorCorrectionLevel = EC_LOW; break;
+                case EC_MEDIUM: stg->errorCorrectionLevel = EC_MEDIUM; break;
+                case EC_QUATILE: stg->errorCorrectionLevel = EC_QUATILE; break;
+                case EC_HIGH: stg->errorCorrectionLevel = EC_HIGH; break;
+                default:
+                    stg->errorCorrectionLevel = EC_AUTOMATIC;
+            }
+
+            i++;
+        }
+        else if(strcmp(argv[i], COLOR_MODE_FLAG) == 0){
+            stg->colorMode = COLOR;
+        }
+        else {
+            ExitWithError(UNKNOWN_TYPE);
+        }
+
     }
 
     return stg;

@@ -1,11 +1,12 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#define SIZE_FLAG "-s"
-#define ERR_LEVEL_FLAG "-e"
-#define CONTENT_FILE_FLAG "-f"
-#define CONTENT_TEXT_FLAG "-t"
-#define ENCODING_MODE_FLAG "-m"
+#define SIZE_FLAG "--size"
+#define ERR_LEVEL_FLAG "--error"
+#define CONTENT_FILE_FLAG "--file"
+#define CONTENT_TEXT_FLAG "--text"
+#define ENCODING_MODE_FLAG "--mode"
+#define COLOR_MODE_FLAG "--color"
 
 typedef enum {
     EC_LOW = 'l',
@@ -27,21 +28,20 @@ typedef enum {
     M_BYTE = 'b'
 } EncodingMode;
 
+typedef enum {
+    WHITE_BLACK,
+    COLOR
+} ColorMode;
+
 typedef struct {
-    WindowSize winSize;
-    ErrorCorrection errLevel;
-    EncodingMode ecMode;
+    WindowSize windowSize;
+    ErrorCorrection errorCorrectionLevel;
+    EncodingMode encodingMode;
+    ColorMode colorMode;
     char* content;
     size_t contentSize;
 } Settings;
 
-Settings* initSettings();
-
-FILE* openContentFile(char* filesPath);
-
-char* readContentFile(FILE* fptr, size_t *bufferSize);
-
 Settings* getSettings(int argc, char** argv);
-
 
 #endif
