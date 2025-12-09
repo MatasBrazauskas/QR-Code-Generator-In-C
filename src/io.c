@@ -1,8 +1,17 @@
 #include <stdlib.h>
+#include <math.h>
 #include <stdio.h>
 
 #include "errors.h"
 #include "io.h"
+
+static char* Colors[] = {
+    "255 255 255",
+    "0 0 0",
+    "255 128 128",
+    "127 0 0"
+};
+
 
 FILE* openContentFile(const char* filesPath){
     FILE* fptr = fopen(filesPath, "r");
@@ -35,4 +44,57 @@ char* readContentFile(FILE* fptr, size_t *bufferSize){
     *bufferSize = read;
 
     return buffer;
+}
+
+char* colorCode(size_t index, Settings* stg){
+    if(stg->colorMode == WHITE_BLACK){
+        return Colors[index % 2];
+    }
+    return Colors[index];
+}
+
+void createImage(Buffer* buffer, Settings* stg) {
+    FILE* fptr = fopen("temp.ppm", "w");
+    if (!fptr) ExitWithError("Can't create PBM");
+
+    const size_t PADDING = 4;
+
+    size_t qrSize = buffer->length;
+    size_t fullModules = qrSize + 2 * PADDING;
+
+    size_t pixelsPerModule = stg->windowSize / fullModules;
+
+    if (pixelsPerModule < 1)
+        pixelsPerModule = 1;
+
+    size_t imageSize = fullModules * pixelsPerModule;
+
+    fprintf(fptr, "P3\n");
+    fprintf(fptr, "%zu %zu\n", imageSize, imageSize);
+    fprintf(fptr, "%d\n", 255);
+
+    for (size_t y = 0; y < imageSize; y++) {
+        size_t moduleY = y / pixelsPerModule;
+
+        for (size_t x = 0; x < imageSize; x++) {
+            size_t moduleX = x / pixelsPerModule;
+
+            char* val = Colors[0];
+
+            if (moduleX >= PADDING && moduleX < PADDING + qrSize &&
+                moduleY >= PADDING && moduleY < PADDING + qrSize) {
+
+                size_t qrX = moduleX - PADDING;
+                size_t qrY = moduleY - PADDING;
+
+                val = colorCode(buffer->matrix[qrY][qrX], stg);
+            }
+
+            fprintf(fptr, "%s ", val);
+            fputc('\n', fptr);
+        }
+
+    }
+
+    fclose(fptr);
 }

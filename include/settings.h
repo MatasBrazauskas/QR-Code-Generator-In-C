@@ -5,7 +5,7 @@
 #define ERR_LEVEL_FLAG "--error"
 #define CONTENT_FILE_FLAG "--file"
 #define CONTENT_TEXT_FLAG "--text"
-#define ENCODING_MODE_FLAG "--mode"
+//#define ENCODING_MODE_FLAG "--mode"
 #define COLOR_MODE_FLAG "--color"
 
 typedef enum {
@@ -13,20 +13,20 @@ typedef enum {
     EC_MEDIUM = 'm',
     EC_QUATILE = 'q',
     EC_HIGH = 'h',
-    EC_AUTOMATIC = 'a'
+    //EC_AUTOMATIC,
 } ErrorCorrection;
 
-typedef enum {
+/*typedef enum {
     W_SMALL = 's',
     W_MEDIUM = 'm',
     W_LARGE = 'l'
-} WindowSize;
+} WindowSize;*/
 
-typedef enum {
+/*typedef enum {
     M_NUM = 'n',
     M_ALPHA = 'a',
     M_BYTE = 'b'
-} EncodingMode;
+} EncodingMode;*/
 
 typedef enum {
     WHITE_BLACK,
@@ -34,9 +34,10 @@ typedef enum {
 } ColorMode;
 
 typedef struct {
-    WindowSize windowSize;
+    //WindowSize windowSize;
+    size_t windowSize;
     ErrorCorrection errorCorrectionLevel;
-    EncodingMode encodingMode;
+    //EncodingMode encodingMode;
     ColorMode colorMode;
     char* content;
     size_t contentSize;
