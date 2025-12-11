@@ -60,3 +60,35 @@ void orientation(Buffer* buffer) {
         }
     }
 }
+
+void seperators(Buffer* buffer)
+{
+    for(int i = 0; i < 8; i++)
+    {
+
+        buffer->matrix[i][7] = 4;
+        buffer->matrix[i][buffer->length - 8] = 4;
+        buffer->matrix[i + buffer->length - 8][7] = 4;
+    }
+
+    for(int i = 0; i < 7; i++)
+    {
+        buffer->matrix[7][i] = 4;
+        buffer->matrix[7][buffer->length - 7 + i] = 4;
+        buffer->matrix[buffer->length - 8][i] = 4;
+    }
+}
+
+void timing(Buffer* buffer)
+{
+    for(size_t i = 8; i < buffer->length - 8; i++)
+    {
+        buffer->matrix[i][6] = (i % 2 == 0) ? 7 : 6;
+        buffer->matrix[6][i] = buffer->matrix[i][6];
+    }
+}
+
+void placeOnePixel(Buffer* buffer)
+{
+    buffer->matrix[buffer->length - 8][8] = 1;
+}

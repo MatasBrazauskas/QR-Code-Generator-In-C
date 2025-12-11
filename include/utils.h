@@ -52,5 +52,10 @@ Buffer* initBuffer(Settings* stg);
 
 void orientation(Buffer* buffer);
 
+void seperators(Buffer* buffer);
+
+void timing(Buffer* buffer);
+
+void placeOnePixel(Buffer* buffer);
 
 #endif

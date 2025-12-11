@@ -20,6 +20,9 @@ int main(int argc, char** argv)
     Buffer* buffer = initBuffer(stg);
 
     orientation(buffer);
+    seperators(buffer);
+    timing(buffer);
+    placeOnePixel(buffer);
 
     createImage(buffer, stg);
 
