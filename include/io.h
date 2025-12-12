@@ -9,4 +9,8 @@ char* readContentFile(FILE* fptr, size_t *bufferSize);
 
 void createImage(Buffer* buffer, Settings* stg);
 
+void createImageColorful(Buffer* buffer, Settings* stg);
+
+void createImageWhiteBlack(Buffer* buffer, Settings* stg);
+
 #endif

@@ -14,10 +14,8 @@ static Settings* initSettings(){
         ExitWithError("Can't  allocate settings");
     }
 
-    //stg->windowSize =W_MEDIUM;
     stg->windowSize = 600;
     stg->errorCorrectionLevel = EC_HIGH;
-    //stg->encodingMode = M_BYTE;
     stg->colorMode = WHITE_BLACK;
     stg->content = NULL;
     stg->contentSize = 0;
@@ -32,17 +30,7 @@ Settings* getSettings(int argc, char** argv) {
     {
         if(strcmp(argv[i], SIZE_FLAG) == 0){
             ArgvBoundCheck(i, argc);
-
-            //char windowSize = tolower(argv[i + 1][0]);
             stg->windowSize = atol(argv[i + 1]);
-            
-            /*switch(windowSize) {
-                case W_SMALL: stg->windowSize = W_SMALL; break;
-                case W_MEDIUM: stg->windowSize = W_MEDIUM; break;
-                case W_LARGE: stg->windowSize = W_LARGE; break;
-                default:
-                    ExitWithError(UNKNOWN_TYPE);
-            }*/
             i++;
         }
         else if(strcmp(argv[i], CONTENT_FILE_FLAG) == 0){
@@ -76,25 +64,6 @@ Settings* getSettings(int argc, char** argv) {
             stg->contentSize = bufferSize;
             i++;
         }
-        /*else if (strcmp(argv[i], ENCODING_MODE_FLAG) == 0){
-            ArgvBoundCheck(i, argc);
-
-            if(strlen(argv[i+1]) != 1){
-                ExitWithError(ARGUMENT_TOO_SHORT);
-            }
-
-            char encodingFlag = tolower(argv[i + 1][0]); 
-
-            switch(encodingFlag) {
-                case M_NUM: stg->encodingMode = M_NUM; break;
-                case M_ALPHA: stg->encodingMode = M_ALPHA; break;
-                case M_BYTE: stg->encodingMode = M_BYTE; break;
-                default:
-                    ExitWithError(UNKNOWN_TYPE);
-            }
-
-            i++;
-        }*/
         else if(strcmp(argv[i], ERR_LEVEL_FLAG) == 0){
             ArgvBoundCheck(i, argc);
 
@@ -110,7 +79,6 @@ Settings* getSettings(int argc, char** argv) {
                 case EC_QUATILE: stg->errorCorrectionLevel = EC_QUATILE; break;
                 case EC_HIGH: stg->errorCorrectionLevel = EC_HIGH; break;
                 default:
-                    //stg->errorCorrectionLevel = EC_AUTOMATIC;
                     ExitWithError("Unknown error flag");
             }
 

@@ -58,4 +58,8 @@ void timing(Buffer* buffer);
 
 void placeOnePixel(Buffer* buffer);
 
+void alignmentPattern(Buffer* buffer);
+
+void encodingMode(Buffer* buffer);
+
 #endif
