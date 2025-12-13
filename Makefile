@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -I include -Wall -Wextra -Werror
+CFLAGS = -I include -Wall -Wextra -Werror -O3
 
 all:
 	$(CC) $(CFLAGS) src/*.c -o main

@@ -6,6 +6,7 @@
 #define CONTENT_FILE_FLAG "--file"
 #define CONTENT_TEXT_FLAG "--text"
 #define COLOR_MODE_FLAG "--color"
+#define MASK_FLAG "--mask"
 
 typedef enum {
     EC_LOW = 'l',
@@ -22,6 +23,7 @@ typedef enum {
 typedef struct {
     size_t windowSize;
     ErrorCorrection errorCorrectionLevel;
+    size_t maskPattern;
     ColorMode colorMode;
     char* content;
     size_t contentSize;

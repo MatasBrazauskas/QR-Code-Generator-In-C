@@ -16,6 +16,7 @@ static Settings* initSettings(){
 
     stg->windowSize = 600;
     stg->errorCorrectionLevel = EC_HIGH;
+    stg->maskPattern = 0;
     stg->colorMode = WHITE_BLACK;
     stg->content = NULL;
     stg->contentSize = 0;
@@ -31,6 +32,17 @@ Settings* getSettings(int argc, char** argv) {
         if(strcmp(argv[i], SIZE_FLAG) == 0){
             ArgvBoundCheck(i, argc);
             stg->windowSize = atol(argv[i + 1]);
+            i++;
+        }
+        else if(strcmp(argv[i], MASK_FLAG) == 0){
+            ArgvBoundCheck(i, argc);
+            int maskPattern = atoi(argv[i + 1]);
+
+            if(maskPattern < 0 || maskPattern > 7){
+                ExitWithError("Mask pattern is incorrect");
+            }
+
+            stg->maskPattern = (size_t)maskPattern;
             i++;
         }
         else if(strcmp(argv[i], CONTENT_FILE_FLAG) == 0){

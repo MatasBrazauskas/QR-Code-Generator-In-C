@@ -15,9 +15,11 @@ static char* Colors[] = {
     "127 51 0", // timing L
     "255 179 128", // timing D
     "255 170 204", // aligment L 
-    "127 42 76" // aligment D
+    "127 42 76", // aligment D
     "240 155 255", // enc and length L
-    "127 42 76" // enc and length D
+    "127 42 76", // enc and length D
+    "137 234 223", //formating L
+    "178 60 0" // fomrating D
 };
 
 

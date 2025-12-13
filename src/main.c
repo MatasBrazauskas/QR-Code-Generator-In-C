@@ -14,6 +14,7 @@ int main(int argc, char** argv)
     printf("%s %s\n",CONTENT_TEXT_FLAG, stg->content);
     printf("%s %zu\n", "SIZE OF CONTENT", stg->contentSize);
     printf("%s %c\n", ERR_LEVEL_FLAG, stg->errorCorrectionLevel);
+    printf("%s %zu\n", MASK_FLAG, stg->maskPattern);
 
     Buffer* buffer = initBuffer(stg);
 
@@ -23,6 +24,8 @@ int main(int argc, char** argv)
     placeOnePixel(buffer);
     alignmentPattern(buffer);
     encodingMode(buffer);
+    length(buffer, stg);
+    formatInformation(buffer, stg);
 
     createImage(buffer, stg);
 
@@ -33,6 +36,6 @@ int main(int argc, char** argv)
         printf("\n");
     }
 
-    printf("%zu\n", buffer->level);
-    printf("%zu\n", buffer->length);
+    printf("Version %zu\n", buffer->level);
+    printf("Buffer length %zu\n", buffer->length);
 }

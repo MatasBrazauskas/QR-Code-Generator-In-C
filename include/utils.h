@@ -62,4 +62,10 @@ void alignmentPattern(Buffer* buffer);
 
 void encodingMode(Buffer* buffer);
 
+void length(Buffer* buffer, Settings* stg);
+
+void formatInformation(Buffer* buffer, Settings* stg);
+
+void placeData(Buffer* buffer, Settings* stg);
+
 #endif
