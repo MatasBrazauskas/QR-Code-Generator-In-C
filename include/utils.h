@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <stdio.h>
 #include <stddef.h>
 #include <settings.h>
 
@@ -60,7 +61,7 @@ void placeOnePixel(Buffer* buffer);
 
 void alignmentPattern(Buffer* buffer);
 
-void encodingMode(Buffer* buffer);
+void encodingMode(Buffer* buffer, Settings* stg);
 
 void length(Buffer* buffer, Settings* stg);
 

@@ -23,9 +23,11 @@ int main(int argc, char** argv)
     timing(buffer);
     placeOnePixel(buffer);
     alignmentPattern(buffer);
-    encodingMode(buffer);
+    encodingMode(buffer, stg);
     length(buffer, stg);
     formatInformation(buffer, stg);
+
+    placeData(buffer, stg);
 
     createImage(buffer, stg);
 

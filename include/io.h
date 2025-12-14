@@ -5,7 +5,7 @@
 
 FILE* openContentFile(const char* filesPath);
 
-char* readContentFile(FILE* fptr, size_t *bufferSize);
+unsigned char* readContentFile(FILE* fptr, size_t *bufferSize);
 
 void createImage(Buffer* buffer, Settings* stg);
 

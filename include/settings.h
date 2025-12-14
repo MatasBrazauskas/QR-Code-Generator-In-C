@@ -25,7 +25,7 @@ typedef struct {
     ErrorCorrection errorCorrectionLevel;
     size_t maskPattern;
     ColorMode colorMode;
-    char* content;
+    unsigned char* content;
     size_t contentSize;
 } Settings;
 

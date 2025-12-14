@@ -19,7 +19,9 @@ static char* Colors[] = {
     "240 155 255", // enc and length L
     "127 42 76", // enc and length D
     "137 234 223", //formating L
-    "178 60 0" // fomrating D
+    "178 60 0", // fomrating D
+    "80 80 80", // data L
+    "60 60 60" //data D
 };
 
 
@@ -33,7 +35,7 @@ FILE* openContentFile(const char* filesPath){
     return fptr;
 }
 
-char* readContentFile(FILE* fptr, size_t *bufferSize){
+unsigned char* readContentFile(FILE* fptr, size_t *bufferSize){
 
     fseek(fptr, 0, SEEK_END);
     long size = ftell(fptr);
@@ -43,7 +45,7 @@ char* readContentFile(FILE* fptr, size_t *bufferSize){
         ExitWithError("Can't read file");
     }
 
-    char* buffer = malloc((size_t)size);
+    unsigned char* buffer = malloc((size_t)size);
     if(buffer == NULL){
         ExitWithError("Can't allocate buffer");
     }

@@ -197,16 +197,32 @@ void alignmentPattern(Buffer* buffer)
     }
 }
 
-void encodingMode(Buffer* buffer) {
+void encodingMode(Buffer* buffer, Settings* stg) {
+    func_type maskFunction = functions[stg->maskPattern];
     size_t maxLength = buffer->length;
 
-    buffer->matrix[maxLength - 1][maxLength - 1] = 10;
-    buffer->matrix[maxLength - 1][maxLength - 2] = 11;
-    buffer->matrix[maxLength - 2][maxLength - 1] = 10;
-    buffer->matrix[maxLength - 2][maxLength - 2] = 10;
+    buffer->matrix[maxLength - 1][maxLength - 1] = 0;
+    buffer->matrix[maxLength - 1][maxLength - 2] = 1;
+    buffer->matrix[maxLength - 2][maxLength - 1] = 0;
+    buffer->matrix[maxLength - 2][maxLength - 2] = 0;
+
+    for(int i = 0; i < 2; i++) {
+        for(int j = 0; j < 2; j++) {
+            if(maskFunction(maxLength - 1 - i, maxLength - 1 - j) == true){
+                printf("Hello naxui\n");
+                char temp = buffer->matrix[maxLength - 1 - i][maxLength - 1 - j];
+
+                if(temp == 0) buffer->matrix[maxLength - 1 - i][maxLength - 1 - j] = 1;
+                else if (temp == 1) buffer->matrix[maxLength - 1 - i][maxLength - 1 - j] = 0;
+            }
+
+            buffer->matrix[maxLength - 1 - i][maxLength - 1 - j] += 10;
+        }
+    }
 }
 
 void length(Buffer* buffer, Settings* stg) {
+    func_type maskFunction = functions[stg->maskPattern];
     size_t lengthBitCount = 8;
 
     if(buffer->level >= 10) {
@@ -220,7 +236,12 @@ void length(Buffer* buffer, Settings* stg) {
         size_t row = maxLength - 2 - (size_t)(lengthBitCount / 2) + (i / 2);
         size_t col = maxLength - 2 + (i % 2);
 
-        buffer->matrix[row][col] = ((lengthInBits >> i) & 1) + 10;
+        bool flag = ((lengthInBits >> i) & 1);
+        if(maskFunction(row, col)){
+            flag = !flag;
+        }
+
+        buffer->matrix[row][col] = flag + 10;
     }
 }
 
@@ -274,4 +295,84 @@ void formatInformation(Buffer* buffer, Settings* stg) {
     } 
 
     free(string);
+}
+
+void placeData(Buffer* buffer, Settings* stg)
+{
+    func_type maskFunction = functions[stg->maskPattern];
+
+    int size = buffer->length;
+    int x = size - 1;
+
+    size_t charIndex = 0;
+    int bitPlacement = 7;
+
+    char mask = 1 << (sizeof(char) * 8 - 1);
+    char input_char = stg->content[0];
+
+    for (int i = 0; i < (int)sizeof(char) * 8; i++) {
+        if (input_char & mask) {
+            printf("1");
+        } else {
+            printf("0");
+        }
+        
+        mask >>= 1;
+    }
+
+    printf("\n");
+
+    while (x > 0 && charIndex < stg->contentSize) {
+
+        if (x == 6) x--;  // skip timing column
+
+        // UP
+        for (int y = size - 1; y >= 0; y--) {
+            for (int dx = 0; dx < 2; dx++) {
+
+                if (buffer->matrix[y][x - dx] == 0) {
+                    bool bit = (stg->content[charIndex] >> bitPlacement) & 1;
+
+                    if (maskFunction(y, x-dx)) {
+                        bit ^= 1;
+                    }
+
+                    buffer->matrix[y][x - dx] = bit + 14;
+
+                    if (--bitPlacement < 0) {
+                        bitPlacement = 7;
+                        charIndex++;
+                        if (charIndex >= stg->contentSize) return;
+                    }
+                }
+            }
+        }
+
+        x -= 2;
+        if (x == 6) x--;
+
+        // DOWN
+        for (int y = 0; y < size; y++) {
+            for (int dx = 0; dx < 2; dx++) {
+
+                if (buffer->matrix[y][x - dx] == 0) {
+                    bool bit = (stg->content[charIndex] >> bitPlacement) & 1;
+
+                    if (maskFunction(y, x - dx)) {
+                        bit ^= 1;
+                    }
+
+                    buffer->matrix[y][x - dx] = bit + 14;
+
+                    if (--bitPlacement < 0) {
+                        bitPlacement = 7;
+                        charIndex++;
+                        if (charIndex >= stg->contentSize) return;
+                    }
+                }
+            }
+        }
+
+        x -= 2;
+    }
 }

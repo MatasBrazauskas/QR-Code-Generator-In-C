@@ -57,7 +57,7 @@ Settings* getSettings(int argc, char** argv) {
             FILE* fptr = openContentFile(path);
 
             size_t bufferSize;
-            char* content = readContentFile(fptr, &bufferSize);
+            unsigned char* content = readContentFile(fptr, &bufferSize);
 
             stg->content = content;
             stg->contentSize = bufferSize;
@@ -69,8 +69,8 @@ Settings* getSettings(int argc, char** argv) {
         else if(strcmp(argv[i], CONTENT_TEXT_FLAG) == 0) {
             ArgvBoundCheck(i, argc);
 
-            char* buffer = argv[i + 1];
-            size_t bufferSize = strlen(buffer);
+            unsigned char* buffer = (unsigned char*)argv[i + 1];
+            size_t bufferSize = strlen((char*)buffer);
 
             stg->content = buffer;
             stg->contentSize = bufferSize;
