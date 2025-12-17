@@ -209,7 +209,6 @@ void encodingMode(Buffer* buffer, Settings* stg) {
     for(int i = 0; i < 2; i++) {
         for(int j = 0; j < 2; j++) {
             if(maskFunction(maxLength - 1 - i, maxLength - 1 - j) == true){
-                printf("Hello naxui\n");
                 char temp = buffer->matrix[maxLength - 1 - i][maxLength - 1 - j];
 
                 if(temp == 0) buffer->matrix[maxLength - 1 - i][maxLength - 1 - j] = 1;
@@ -307,18 +306,12 @@ void placeData(Buffer* buffer, Settings* stg)
     size_t charIndex = 0;
     int bitPlacement = 7;
 
-    char mask = 1 << (sizeof(char) * 8 - 1);
-    char input_char = stg->content[0];
+    unsigned char c = (unsigned char)stg->content[0];
 
-    for (int i = 0; i < (int)sizeof(char) * 8; i++) {
-        if (input_char & mask) {
-            printf("1");
-        } else {
-            printf("0");
-        }
-        
-        mask >>= 1;
+    for (int i = 7; i >= 0; i--) {
+        putchar(((c >> i) & 1) ? '1' : '0');
     }
+    putchar('\n');
 
     printf("\n");
 
@@ -331,13 +324,16 @@ void placeData(Buffer* buffer, Settings* stg)
             for (int dx = 0; dx < 2; dx++) {
 
                 if (buffer->matrix[y][x - dx] == 0) {
-                    bool bit = (stg->content[charIndex] >> bitPlacement) & 1;
+                    bool bit = ((unsigned char)stg->content[charIndex] >> bitPlacement) & 1;
 
                     if (maskFunction(y, x-dx)) {
-                        bit ^= 1;
+                        bit = !bit;
                     }
 
                     buffer->matrix[y][x - dx] = bit + 14;
+
+                    char d = stg->content[charIndex];
+                    putchar(((d >> bitPlacement) & 1) ? '1' : '0');
 
                     if (--bitPlacement < 0) {
                         bitPlacement = 7;
@@ -356,13 +352,16 @@ void placeData(Buffer* buffer, Settings* stg)
             for (int dx = 0; dx < 2; dx++) {
 
                 if (buffer->matrix[y][x - dx] == 0) {
-                    bool bit = (stg->content[charIndex] >> bitPlacement) & 1;
+                    bool bit = ((unsigned char)stg->content[charIndex] >> bitPlacement) & 1;
 
                     if (maskFunction(y, x - dx)) {
-                        bit ^= 1;
+                        bit = !bit;
                     }
 
                     buffer->matrix[y][x - dx] = bit + 14;
+
+                    char d = stg->content[charIndex];
+                    putchar(((d >> bitPlacement) & 1) ? '1' : '0');
 
                     if (--bitPlacement < 0) {
                         bitPlacement = 7;

@@ -10,8 +10,12 @@ qr = qrcode.QRCode(
 )
 
 #data = b"\xaa" * 13
-#data = "Matas Brazauskas"
-data = "Matas Brazauskas"
+data = "MatasBrazauskas!"
+
+for char in data:
+    print(f"{ord(char):08b}", end="")  # 08b = pad to 8 bits
+print()
+
 qr.add_data(data, optimize=0)
 qr.make(fit=True)
 
